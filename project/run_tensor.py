@@ -48,14 +48,14 @@ class Network(minitorch.Module):
         self.layer1 = Linear(2, hidden_layers)
         self.layer2 = Linear(hidden_layers, hidden_layers)
         self.layer3 = Linear(hidden_layers, 1)
-    
+
     def forward(self, x):
         """
         Forward pass of the neural network.
-        
+
         Args:
             x (Tensor): Input tensor of shape (batch_size, 2)
-        
+
         Returns:
             Tensor: Output tensor of shape (batch_size, 1) after sigmoid activation
         """
