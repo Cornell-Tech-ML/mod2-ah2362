@@ -487,9 +487,9 @@ class Tensor:
         other = self._ensure_tensor(other)
         return Add.apply(other, self)
 
-    def __rmul__(self, other: TensorLike) -> Tensor:
-        other = self._ensure_tensor(other)
-        return Mul.apply(other, self)
+    def __rmul__(self, y: Tensor) -> Tensor:
+        """Right multiplying self Tensor and y Tensor"""
+        return self.__mul__(y)
 
     def all(self, dim: Optional[int] = None) -> Tensor:
         """Compute the logical AND across dimensions.
