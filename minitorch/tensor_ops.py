@@ -41,23 +41,7 @@ class TensorOps:
     def reduce(
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[[Tensor, int], Tensor]:
-        """Create a reduce function.
-
-        This method takes a binary function `fn` and an initial value `start`, and returns a function that reduces a tensor along a specified dimension using the provided binary function.
-
-        Args:
-        ----
-            fn : Callable[[float, float], float]
-                A binary function to apply during the reduction.
-            start : float, optional
-                The initial value for the reduction (default is 0.0).
-
-        Returns:
-        -------
-            Callable[[Tensor, int], Tensor]
-                A function that reduces a tensor along a specified dimension using the provided binary function.
-
-        """
+        """Create a reduce function."""
         ...
 
     @staticmethod
@@ -156,35 +140,7 @@ class SimpleOps(TensorOps):
     def zip(
         fn: Callable[[float, float], float],
     ) -> Callable[["Tensor", "Tensor"], "Tensor"]:
-        """Higher-order tensor zip function ::
-
-          fn_zip = zip(fn)
-          out = fn_zip(a, b)
-
-        Simple version ::
-
-            for i:
-                for j:
-                    out[i, j] = fn(a[i, j], b[i, j])
-
-        Broadcasted version (`a` and `b` might be smaller than `out`) ::
-
-            for i:
-                for j:
-                    out[i, j] = fn(a[i, 0], b[0, j])
-
-
-        Args:
-        ----
-            fn: function from two floats-to-float to apply
-            a (:class:`TensorData`): tensor to zip over
-            b (:class:`TensorData`): tensor to zip over
-
-        Returns:
-        -------
-            :class:`TensorData` : new tensor data
-
-        """
+        """Higher-order tensor zip function"""
         f = tensor_zip(fn)
 
         def ret(a: "Tensor", b: "Tensor") -> "Tensor":
@@ -202,35 +158,7 @@ class SimpleOps(TensorOps):
     def reduce(
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[["Tensor", int], "Tensor"]:
-        """Higher-order tensor reduce function. ::
-
-          fn_reduce = reduce(fn)
-          out = fn_reduce(a, dim)
-
-        Simple version ::
-
-            for j:
-                out[1, j] = start
-                for i:
-                    out[1, j] = fn(out[1, j], a[i, j])
-
-        Args:
-        ----
-            fn: Callable[[float, float], float]
-                Function from two floats to a float to apply.
-            start: float, optional
-                The initial value to start the reduction. Default is 0.0.
-            a: Tensor
-                Tensor to reduce over.
-            dim: int
-                Dimension to reduce.
-
-        Returns:
-        -------
-            Callable[["Tensor", int], "Tensor"]
-                A function that takes a tensor and a dimension and returns a new reduced tensor.
-
-        """
+        """Higher-order tensor reduce function."""
         f = tensor_reduce(fn)
 
         def ret(a: "Tensor", dim: int) -> "Tensor":
@@ -397,7 +325,6 @@ def tensor_reduce(
         a_strides: Strides,
         reduce_dim: int,
     ) -> None:
-        # TODO: Implement for Task 2.3.
         a_size = int(operators.prod(a_shape))
         a_index = np.zeros(len(a_shape), dtype=np.int32)
         out_index = np.zeros(len(out_shape), dtype=np.int32)

@@ -434,14 +434,14 @@ class Exp(Function):
 
 class Sum(Function):
     @staticmethod
-    def forward(ctx: Context, a: Tensor, dimT: Tensor) -> Tensor:
+    def forward(ctx: Context, t1: Tensor, dimT: Tensor) -> Tensor:
         """Computes the forward pass for the sum operation.
 
         Parameters
         ----------
         ctx : Context
             The context in which the operation is performed.
-        a : Tensor
+        t1 : Tensor
             The input tensor.
         dimT : Tensor
             The dimensions to sum over.
@@ -452,9 +452,9 @@ class Sum(Function):
 
         """
         dims = [int(d) for d in dimT.to_numpy()]
-        ctx.save_for_backward(a, dimT)
+        ctx.save_for_backward(t1, dimT)
 
-        result = a
+        result = t1
         for dim in dims:
             result = result.f.add_reduce(result, dim)
 
@@ -476,10 +476,10 @@ class Sum(Function):
         Tensor: The gradient of the input with respect to the output.
 
         """
-        a, dim = ctx.saved_values
-        grad_a = a.expand(grad_output)
+        t1, dim = ctx.saved_values
         grad_dim = grad_output.zeros(dim.shape)
-        return grad_a, grad_dim
+        grad_tensor = t1.expand(grad_output)
+        return grad_tensor, grad_dim
 
 
 class LT(Function):
@@ -587,7 +587,7 @@ class IsClose(Function):
         Tensor: The result of comparing t1 and t2 element-wise for closeness.
 
         """
-        # ctx.save_for_backward(t1, t2)
+        ctx.save_for_backward(t1, t2)
         return t1.f.is_close_zip(t1, t2)
 
 

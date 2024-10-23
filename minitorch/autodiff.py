@@ -138,35 +138,31 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
-    """Runs backpropagation on the computation graph in order to
-    compute derivatives for the leave nodes.
+    """Runs backpropagation on the computation graph in order to compute derivatives for the leave nodes.
 
     Args:
     ----
         variable (Variable) : The right-most variable
         deriv (Any) : Its derivative that we want to propagate backward to the leaves.
 
-
     Returns:
     -------
         None
 
     """
-    grad_table = {variable.unique_id: deriv}
-    # print(grad_table)
-
-    sorted_variables = topological_sort(variable)
-    for var in sorted_variables:
-        d_output = grad_table[var.unique_id]
+    sorted = topological_sort(variable)
+    grads = {variable.unique_id: deriv}
+    for var in sorted:
+        derivative = grads[var.unique_id]
 
         if var.is_leaf():
-            var.accumulate_derivative(d_output)
+            var.accumulate_derivative(derivative)
         else:
-            for parent, d_input in var.chain_rule(d_output):
-                if parent.unique_id in grad_table:
-                    grad_table[parent.unique_id] += d_input
+            for parent, der in var.chain_rule(derivative):
+                if parent.unique_id in grads:
+                    grads[parent.unique_id] = grads[parent.unique_id] + der
                 else:
-                    grad_table[parent.unique_id] = d_input
+                    grads[parent.unique_id] = der
 
 
 @dataclass

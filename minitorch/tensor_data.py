@@ -93,7 +93,7 @@ def broadcast_index(
     """
     # Ensure that the shapes are compatible
     if len(big_shape) < len(shape):
-        raise ValueError("big_shape must be at least as long as shape")
+        raise ValueError("invalid shape")
 
     # Iterate through dimensions from last to first
     for i in range(len(shape) - 1, -1, -1):
@@ -137,7 +137,9 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         if dim1 == 1 or dim2 == 1 or dim1 == dim2:
             result_shape.append(max(dim1, dim2))
         else:
-            raise IndexingError(f"Shapes {shape1} and {shape2} cannot be broadcasted")
+            raise IndexingError(
+                f"Shapes {shape1} and {shape2} cannot both or either be broadcasted"
+            )
     return tuple(reversed(result_shape))
 
 

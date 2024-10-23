@@ -170,9 +170,6 @@ class Log(ScalarFunction):
         return operators.log_back(a, d_output)
 
 
-# To implement.
-
-
 class Mul(ScalarFunction):
     """Multiplication function $f(x, y) = x * y$"""
 
